@@ -64,7 +64,6 @@ function void connector::regist_inport(string name, ref uvm_blocking_get_peek_po
     if (outport.exists(name) && outport[name].size() > len) begin
         outport[name][len].connect(tfifo.analysis_export);
     end
-    `uvm_info("connector", $sformatf("regist inport"), UVM_LOW);
 endfunction
 
 /*******************************************************************************
@@ -84,12 +83,10 @@ function void connector::regist_outport(string name, ref uvm_analysis_port #(T) 
     port = new($sformatf("outport_%s_%0d", name, len), null);
     outport[name].push_back(port);
 
-    `uvm_info("connector", $sformatf("regist outport"), UVM_LOW);
     if (!inport.exists(name) || !inport[name].first(dest)) return;
     do begin
         if (inport[name][dest].size() > len) begin
             port.connect(fifo[name][dest][len].analysis_export);
-            `uvm_info("connector", $sformatf("outport connect"), UVM_LOW);
         end
     end while (inport[name].next(dest));
 endfunction
